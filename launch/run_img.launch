@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>		
+
+	<!-- Run with jostick--> 
+	<node respawn="true" pkg="joy" type="joy_node" name="turtle_joy" >
+		<param name="dev" type="string" value="/dev/input/js0" />		
+	</node>
+	<!--node pkg="innomech" type="innomech" name="robot_control"/-->
+	<!-- Run with jostick--> 
+<!-- Run with jostick--> 
+	<node respawn="true" pkg="self_driving_rc_car" type="self_driving_rc_car" name="teleop_rc_car" >	
+	</node>    
+    
+    <node pkg="self_driving_rc_car" name="dbw.py" type="dbw.py"></node>
+
+	<include file="$(find raspicam_node)/launch/camerav2_410x308_30fps.launch"/>
+
+	
+</launch>
