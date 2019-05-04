@@ -11,8 +11,8 @@ import Adafruit_PCA9685
 
 ##min=10 max=100, for slow smooth driving 20~
 starting_sensitivity=350
-forward_sensivity= 30
-backward_sensivity= 25
+forward_sensivity= 15
+backward_sensivity= 15
 
 # Uncomment to enable debug output.
 #import logging
@@ -64,12 +64,12 @@ def teleop_cmd_callback(teleop_msg):
     
     
     pwm.set_pwm(1,0,servo_cmd)
-    if teleop_msg.forward != 1:
+    if teleop_msg.forward < 0.95:
         pwm.set_pwm(0,0,fwr_cmd)
-        rospy.loginfo("I heard fwr_cmd: %s", fwr_cmd)
-    elif teleop_msg.reverse != 1:  
+        #rospy.loginfo("I heard fwr_cmd: %s", fwr_cmd)
+    elif teleop_msg.reverse <0.95:  
         pwm.set_pwm(0,0,rvrs_cmd)
-        rospy.loginfo("I heard rvrs_cmd: %s", rvrs_cmd)
+        #rospy.loginfo("I heard rvrs_cmd: %s", rvrs_cmd)
     else:
         pwm.set_pwm(0,0,350)
 

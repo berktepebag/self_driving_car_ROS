@@ -16,9 +16,8 @@ public:
 	void joyCallback(const sensor_msgs::Joy::ConstPtr &joy);
 	void joyCommandPublish();
 
-	double forward, inverse, servo;
+	//double forward, inverse, servo;
 
-	std_msgs::Float64 fwr_msg;
 	self_driving_rc_car::RcCarTeleop teleop_msg;
 
 };

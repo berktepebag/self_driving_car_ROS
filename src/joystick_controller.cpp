@@ -18,10 +18,13 @@ void JoystickTeleop::joyCallback(const sensor_msgs::Joy::ConstPtr &joy){
   teleop_msg.forward = joy->axes[5];
   teleop_msg.reverse = joy->axes[2];
   teleop_msg.servo = joy->axes[0];
-
 }
 
 void JoystickTeleop::joyCommandPublish(){
+
+  teleop_msg.header.frame_id = "frame_id";
+  teleop_msg.header.stamp = ros::Time::now();
+
   teleop_cmd_pub.publish(teleop_msg);
 }
 
@@ -32,7 +35,7 @@ int main(int argc, char** argv)
 
   JoystickTeleop joy_teleop;
 
-  ros::Rate rate(50);
+  ros::Rate rate(30);
   while(ros::ok())
   {
     joy_teleop.joyCommandPublish();
