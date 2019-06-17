@@ -13,7 +13,7 @@
     
     <!--node pkg="self_driving_rc_car" name="dbw.py" type="dbw.py"></node-->
 
-	<include file="$(find raspicam_node)/launch/camerav2_410x308_30fps.launch"/>
+	<!--include file="$(find raspicam_node)/launch/camerav2_410x308_30fps.launch"/-->
 
 	
 </launch>

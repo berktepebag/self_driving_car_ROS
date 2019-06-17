@@ -8,7 +8,7 @@ project(self_driving_rc_car)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-camera_calibration_parsers
+#camera_calibration_parsers
 cv_bridge
 image_transport
 message_generation
@@ -114,7 +114,7 @@ catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES self_driving_rc_car
 CATKIN_DEPENDS 
-camera_calibration_parsers 
+#camera_calibration_parsers 
 cv_bridge 
 image_transport 
 roscpp 

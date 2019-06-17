@@ -3,7 +3,8 @@ With Jetson nano somethings has changed.
 Jetson nano comes with Ubuntu 18.04 and ROS Melodic. As far as I could understand Melodic's Python is 3.5+. So PCA9685 is not working directly as it was working in Raspberry Pi. So things to do and links to follow:
 
 1- Do the starting tutorial from Adrian's tutorial: https://www.pyimagesearch.com/2019/05/06/getting-started-with-the-nvidia-jetson-nano/
-2- Also you may want to follow Fei Chung's tutorial of Jetson nano for Donkey car: https://www.pyimagesearch.com/2019/05/06/getting-started-with-the-nvidia-jetson-nano/
+
+2- Also you may want to follow Fei Chung's tutorial of Jetson nano for Donkey car: https://medium.com/@feicheung2016/getting-started-with-jetson-nano-and-autonomous-donkey-car-d4f25bbd1c83
 
 Note: As I remember scipy installation from Adrian's tutorial was failing. Fei also mentioned this in his tutorial. So do not waste time trying to install scipy from Adrian's tutorial ;)
 
