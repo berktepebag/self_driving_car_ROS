@@ -1,19 +1,21 @@
 <?xml version="1.0"?>
 <launch>		
 
-	<!-- Run with jostick--> 
+	<!-- Get jostick input--> 
 	<node respawn="true" pkg="joy" type="joy_node" name="turtle_joy" >
 		<param name="dev" type="string" value="/dev/input/js0" />		
 	</node>
-	<!--node pkg="innomech" type="innomech" name="robot_control"/-->
-	<!-- Run with jostick--> 
-<!-- Run with jostick--> 
-	<node respawn="true" pkg="self_driving_rc_car" type="self_driving_rc_car" name="teleop_rc_car" >	
-	</node>    
-    
-    <!--node pkg="self_driving_rc_car" name="dbw.py" type="dbw.py"></node-->
-
-	<!--include file="$(find raspicam_node)/launch/camerav2_410x308_30fps.launch"/-->
-
 	
+	<!-- Run with jostick-->    
+	<!-- <node pkg="self_driving_rc_car" type="self_driving_rc_car" name="teleop_rc_car"></node> -->
+    <!-- <node pkg="self_driving_rc_car" type="self_driving_rc_car" name="dbw_listener" output="screen"></node> -->
+
+	<!-- Run jetson camera using jetson-inference and jetbot-ros -->
+	<node pkg="jetbot_ros" type="jetbot_camera" name="jetbot_camera"></node>
+
+	<!-- Convert images from raw to compressed -->
+	<!-- <node pkg="image_proc" type="image_proc" name="image_proc" >
+		<remap from="image_raw" to="jetbot_camera/raw"/>
+	</node> -->
+
 </launch>

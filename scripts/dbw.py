@@ -11,8 +11,8 @@ import Adafruit_PCA9685
 
 ##min=10 max=100, for slow smooth driving 20~
 starting_sensitivity=350
-forward_sensivity= 15
-backward_sensivity= 15
+forward_sensivity= 30
+backward_sensivity= 20
 
 # Uncomment to enable debug output.
 #import logging
@@ -28,9 +28,9 @@ pwm = Adafruit_PCA9685.PCA9685()
 ##Sol Donus
 servo_min = 300  # Min pulse length out of 4096
 ##Orta
-servo_mid = 400  # Min pulse length out of 4096
+servo_mid = 380  # Min pulse length out of 4096
 ##Sag Donus
-servo_max = 500  # Max pulse length out of 4096
+servo_max = 450  # Max pulse length out of 4096
 
 dc_max = 4000  # Max pulse length out of 4096
 
@@ -57,8 +57,13 @@ def teleop_cmd_callback(teleop_msg):
 
     #rospy.loginfo(rospy.get_caller_id() + "I heard servo: %s", teleop_msg.servo)
 
-    servo_cmd = int(servo_mid - teleop_msg.servo*100)
-    #rospy.loginfo("I heard servo: %s", servo_cmd)
+    
+    servo_cmd = int(servo_mid + teleop_msg.servo*100)
+    if(servo_cmd<servo_min):
+        servo_cmd = servo_min
+    elif(servo_cmd>servo_max):
+        servo_cmd=servo_max
+    rospy.loginfo("I heard servo: %s", servo_cmd)
     fwr_cmd = int(starting_sensitivity - (teleop_msg.forward-1)*forward_sensivity) #Triggers work between 1 (not pressed) to -1 (pressed).
     rvrs_cmd = int(starting_sensitivity + (teleop_msg.reverse-1)*backward_sensivity) #
     
