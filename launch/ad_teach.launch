@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>		
+
+	<!-- Get jostick input--> 
+	<node respawn="true" pkg="joy" type="joy_node" name="turtle_joy" >
+		<param name="dev" type="string" value="/dev/input/js0" />		
+	</node>
+	
+	<!-- Run with jostick-->    
+	<node pkg="self_driving_rc_car" type="joystick_controller" name="teleop_rc_car" respawn="true"></node>
+    <node pkg="self_driving_rc_car" type="dbw.py" name="dbw_listener" respawn="true"></node>
+
+	<!-- Run jetson camera using jetson-inference and jetbot-ros -->
+	<node pkg="jetbot_ros" type="jetbot_camera" name="jetbot_camera"></node>
+
+	<!-- Convert images from raw to compressed -->
+	<!-- <node pkg="image_proc" type="image_proc" name="image_proc" >
+		<remap from="image_raw" to="jetbot_camera/raw"/>
+	</node> -->
+
+</launch>
