@@ -14,48 +14,43 @@
 using namespace message_filters;
 
 ros::Publisher img_pub;
-ros::Publisher cmd_pub;
+ros::Publisher sync_cmd_pub;
 
 cv::Mat resized_img;
-sensor_msgs::ImagePtr resized_img_msg;
-image_transport::Publisher resized_img_pub;
+sensor_msgs::ImagePtr synced_img_msg;
+image_transport::Publisher sync_img_pub;
 
 
 void callback(const self_driving_rc_car::RcCarTeleop::ConstPtr& teleop_msg, 
-              const sensor_msgs::Image::ConstPtr& img_msg) {
+              const sensor_msgs::CompressedImage::ConstPtr& img_msg) {
 
-    cv::Mat img_received = cv_bridge::toCvShare(img_msg, "bgr8")->image;
-    cv::Size size = img_received.size();
+    cv::Mat comp_img = cv::imdecode(cv::Mat(img_msg->data),1); // converts compressed image to cv::Mat
+    synced_img_msg = cv_bridge::CvImage(img_msg->header,"bgr8",comp_img).toImageMsg();
 
-    cv::resize(img_received,resized_img,cv::Size(), 0.5,0.5, cv::INTER_AREA);
-    cv::Size resized = resized_img.size();
+    sync_img_pub.publish(synced_img_msg);
+    sync_cmd_pub.publish(teleop_msg);
 
-    std_msgs::Header header; // empty header
-    header.stamp = teleop_msg->header.stamp; // time
-    resized_img_msg = cv_bridge::CvImage(header, "bgr8", resized_img).toImageMsg();    
-    resized_img_pub.publish(resized_img_msg);
-
-    cmd_pub.publish(teleop_msg);
+    
 }
 
 int main(int argc, char** argv) {
 
-    ros::init(argc, argv, "combinedNode");
+    ros::init(argc, argv, "sync_node");
     ros::NodeHandle nh;
     
     message_filters::Subscriber<self_driving_rc_car::RcCarTeleop> f_sub(nh, "rc_car/teleop_cmd", 1);
-    message_filters::Subscriber<sensor_msgs::Image> s_sub(nh, "image_color", 1);
+    message_filters::Subscriber<sensor_msgs::CompressedImage> s_sub(nh, "rc_car/image_color/compressed", 1);
+    // message_filters::Subscriber<sensor_msgs::Image> s_sub(nh, "/jetbot_camera/raw", 1);    
 
-    typedef sync_policies::ApproximateTime<self_driving_rc_car::RcCarTeleop, sensor_msgs::Image> MySyncPolicy;
+    image_transport::ImageTransport it(nh);
+    sync_img_pub = it.advertise("sync/resized_image", 1); 
+
+    sync_cmd_pub = nh.advertise<self_driving_rc_car::RcCarTeleop>("/sync/teleop_cmd",1);
+
+    typedef sync_policies::ApproximateTime<self_driving_rc_car::RcCarTeleop, sensor_msgs::CompressedImage> MySyncPolicy;
 
     Synchronizer<MySyncPolicy> sync(MySyncPolicy(30), f_sub, s_sub);
     sync.registerCallback(boost::bind(&callback, _1, _2));
-
-    image_transport::ImageTransport it(nh);
-    resized_img_pub = it.advertise("sync/resized_image", 1); 
-
-    //img_pub = nh.advertise<sensor_msgs::CompressedImage>("/sync/image_color",1);
-    cmd_pub = nh.advertise<self_driving_rc_car::RcCarTeleop>("/sync/teleop_cmd",1);
 
     ros::spin();    
     
