@@ -79,3 +79,9 @@ target_link_libraries(time_sync
 ${catkin_LIBRARIES} 
 ${OpenCV_LIBS} 
 )
+
+add_executable(img_cmp src/image_compressor.cpp)
+target_link_libraries(img_cmp 
+${catkin_LIBRARIES} 
+${OpenCV_LIBS} 
+)
