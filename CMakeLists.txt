@@ -18,6 +18,7 @@ std_msgs
 std_srvs
 stereo_msgs
 rosbag
+imu_bmi160
 )
 
 ## Generate messages in the 'msg' folder
@@ -84,4 +85,9 @@ add_executable(img_cmp src/image_compressor.cpp)
 target_link_libraries(img_cmp 
 ${catkin_LIBRARIES} 
 ${OpenCV_LIBS} 
+)
+
+add_executable(imu_bmi160_publisher src/imu_bmi160_publisher.cpp)
+target_link_libraries(imu_bmi160_publisher 
+${catkin_LIBRARIES} 
 )
