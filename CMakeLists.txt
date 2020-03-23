@@ -21,10 +21,13 @@ rosbag
 imu_bmi160
 )
 
+#FIND_LIBRARY(JETSONGPIO_LIBRARY JetsonGPIO /usr/local/lib/libJetsonGPIO.a)
+
 ## Generate messages in the 'msg' folder
 add_message_files(
 FILES
 RcCarTeleop.msg
+WheelEncoder.msg
 )
 
 ## Generate added messages and services with any dependencies listed here
@@ -74,20 +77,35 @@ add_executable(joystick_controller src/joystick_controller.cpp)
 target_link_libraries(joystick_controller 
 ${catkin_LIBRARIES} 
 )
+add_dependencies(joystick_controller self_driving_rc_car_generate_messages_cpp)
 
 add_executable(time_sync src/time_sync.cpp)
 target_link_libraries(time_sync 
 ${catkin_LIBRARIES} 
 ${OpenCV_LIBS} 
 )
+add_dependencies(time_sync self_driving_rc_car_generate_messages_cpp)
 
 add_executable(img_cmp src/image_compressor.cpp)
 target_link_libraries(img_cmp 
 ${catkin_LIBRARIES} 
 ${OpenCV_LIBS} 
 )
+add_dependencies(img_cmp self_driving_rc_car_generate_messages_cpp)
 
 add_executable(imu_bmi160_publisher src/imu_bmi160_publisher.cpp)
 target_link_libraries(imu_bmi160_publisher 
 ${catkin_LIBRARIES} 
 )
+
+#add_executable(pose_estimator src/pose_estimator.cpp)
+#target_link_libraries(pose_estimator 
+#${catkin_LIBRARIES} 
+#)
+#add_dependencies(pose_estimator self_driving_rc_car_generate_messages_cpp)
+
+add_executable(pose_estimator_sync_class src/pose_estimator_sync_class.cpp)
+target_link_libraries(pose_estimator_sync_class 
+${catkin_LIBRARIES} 
+)
+add_dependencies(pose_estimator self_driving_rc_car_generate_messages_cpp)

@@ -7,24 +7,30 @@ import Jetson.GPIO as GPIO
 
 import rospy
 from std_msgs.msg import Float32
+from self_driving_rc_car.msg import WheelEncoder
+
+wheelEncoderMsg = WheelEncoder()
 
 PIN_ID = 17
 
 prev_time = time.time()
 total_distance = 0
 ms = 0.0
+counter = 0
 
-def wheel_enc_pub():
-    global ms
+def wheel_enc_pub(pub,rate):
+    global ms, counter
 
-    pub = rospy.Publisher('rc_car/wheel_encoder', Float32, queue_size=1)
-    rospy.init_node('wheel_encoder', anonymous=True)
-    rate = rospy.Rate(100) # 100hz
     while not rospy.is_shutdown():            
         # rospy.loginfo(ms)
-        if(ms<0.1):
-            ms = 0
-        pub.publish(ms)
+        wheelEncoderMsg.velocity = ms
+        wheelEncoderMsg.counter = counter
+        wheelEncoderMsg.header.stamp = rospy.Time.now()
+        pub.publish(wheelEncoderMsg)
+
+        if(ms>0.005):
+                ms -= ms/5
+        counter += 1
         rate.sleep()
 
 def sensorCallback(channel):
@@ -36,10 +42,7 @@ def sensorCallback(channel):
 
     if GPIO.input(channel):
         # No magnet   
-        GPIO.HIGH    
-        if(ms>0.1):
-            # rospy.loginfo("decreasing... %.2f",ms)
-            ms = ms - 0.5
+        GPIO.HIGH  
     else:  
         # Magnet
         time_diff = timestamp - prev_time
@@ -49,13 +52,19 @@ def sensorCallback(channel):
         kmh = ms*3.6
         str = "%.2f"% (kmh)
         str2 = "%.2f"% (ms)
-        # print(str + " km/h **** " + str2 + " m/s")
+        print(str + " km/h **** " + str2 + " m/s")
     
         total_distance = total_distance + distance
-        # print("total distance %.2f"% (total_distance))
+        print("total distance %.2f"% (total_distance))
 
 
 def main(): 
+    
+    rospy.init_node('wheel_encoder', anonymous=True)
+    
+    pub = rospy.Publisher('rc_car/wheel_encoder', WheelEncoder, queue_size=1)
+    rate = rospy.Rate(50) # 100hz
+
     # Get initial reading
     sensorCallback(PIN_ID)
 
@@ -63,7 +72,8 @@ def main():
     # Loop until users quits with CTRL-C
         while (True) :
             # time.sleep(0.1)
-            wheel_enc_pub()
+            wheel_enc_pub(pub,rate)
+            
     except KeyboardInterrupt:
         # Reset GPIO settings
         GPIO.cleanup()
