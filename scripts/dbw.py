@@ -26,11 +26,11 @@ pwm = Adafruit_PCA9685.PCA9685()
 
 # Configure min and max servo pulse lengths
 ##Sol Donus
-servo_min = 300  # Min pulse length out of 4096
+servo_min = 266  # Min pulse length out of 4096
 ##Orta
-servo_mid = 380  # Min pulse length out of 4096
+servo_mid = 378  # 375 Min pulse length out of 4096
 ##Sag Donus
-servo_max = 450  # Max pulse length out of 4096
+servo_max = 490  # Max pulse length out of 4096
 
 dc_max = 4000  # Max pulse length out of 4096
 
@@ -55,6 +55,8 @@ def callback(twist_msg):
     
 def teleop_cmd_callback(teleop_msg):
 
+    global servo_mid
+
     #rospy.loginfo(rospy.get_caller_id() + "I heard servo: %s", teleop_msg.servo)
 
     
@@ -63,7 +65,7 @@ def teleop_cmd_callback(teleop_msg):
         servo_cmd = servo_min
     elif(servo_cmd>servo_max):
         servo_cmd=servo_max
-    rospy.loginfo("I heard servo: %s", servo_cmd)
+    # rospy.loginfo("I heard servo: %s", servo_cmd)
     fwr_cmd = int(starting_sensitivity - (teleop_msg.forward-1)*forward_sensivity) #Triggers work between 1 (not pressed) to -1 (pressed).
     rvrs_cmd = int(starting_sensitivity + (teleop_msg.reverse-1)*backward_sensivity) #
     
@@ -76,7 +78,7 @@ def teleop_cmd_callback(teleop_msg):
         pwm.set_pwm(0,0,rvrs_cmd)
         #rospy.loginfo("I heard rvrs_cmd: %s", rvrs_cmd)
     else:
-        pwm.set_pwm(0,0,350)
+        pwm.set_pwm(0,0,servo_mid)
 
 
 def listener():

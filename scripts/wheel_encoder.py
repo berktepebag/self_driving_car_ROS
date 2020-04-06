@@ -28,8 +28,8 @@ def wheel_enc_pub(pub,rate):
         wheelEncoderMsg.header.stamp = rospy.Time.now()
         pub.publish(wheelEncoderMsg)
 
-        if(ms>0.005):
-                ms -= ms/5
+        if(ms > 0.01):
+                ms -= 0.01
         counter += 1
         rate.sleep()
 
@@ -47,15 +47,15 @@ def sensorCallback(channel):
         # Magnet
         time_diff = timestamp - prev_time
         prev_time = timestamp
-        distance = 0.033 #m 0.308*1.06
+        distance = 0.033 #m 0.308*1.06 -> wheel diameter * fix 
         ms = distance/time_diff
         kmh = ms*3.6
         str = "%.2f"% (kmh)
         str2 = "%.2f"% (ms)
-        print(str + " km/h **** " + str2 + " m/s")
+        # print(str + " km/h **** " + str2 + " m/s")
     
         total_distance = total_distance + distance
-        print("total distance %.2f"% (total_distance))
+        # print("total distance %.2f"% (total_distance))
 
 
 def main(): 
@@ -63,7 +63,7 @@ def main():
     rospy.init_node('wheel_encoder', anonymous=True)
     
     pub = rospy.Publisher('rc_car/wheel_encoder', WheelEncoder, queue_size=1)
-    rate = rospy.Rate(50) # 100hz
+    rate = rospy.Rate(50) # Hz
 
     # Get initial reading
     sensorCallback(PIN_ID)

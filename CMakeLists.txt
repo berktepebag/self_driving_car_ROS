@@ -19,6 +19,8 @@ std_srvs
 stereo_msgs
 rosbag
 imu_bmi160
+tf
+extended_kalman_filter
 )
 
 #FIND_LIBRARY(JETSONGPIO_LIBRARY JetsonGPIO /usr/local/lib/libJetsonGPIO.a)
@@ -58,8 +60,8 @@ message_runtime
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-include
-${catkin_INCLUDE_DIRS}
+    include
+    ${catkin_INCLUDE_DIRS}    
 )
 
 ## Specify libraries to link a library or executable target against
@@ -93,8 +95,13 @@ ${OpenCV_LIBS}
 )
 add_dependencies(img_cmp self_driving_rc_car_generate_messages_cpp)
 
-add_executable(imu_bmi160_publisher src/imu_bmi160_publisher.cpp)
-target_link_libraries(imu_bmi160_publisher 
+#add_executable(imu_bmi160_publisher src/imu_bmi160_publisher.cpp)
+#target_link_libraries(imu_bmi160_publisher 
+#${catkin_LIBRARIES} 
+#)
+
+add_executable(imu_bmi160_filtered_publisher src/imu_bmi160_filtered_pub.cpp)
+target_link_libraries(imu_bmi160_filtered_publisher 
 ${catkin_LIBRARIES} 
 )
 
@@ -104,8 +111,13 @@ ${catkin_LIBRARIES}
 #)
 #add_dependencies(pose_estimator self_driving_rc_car_generate_messages_cpp)
 
-add_executable(pose_estimator_sync_class src/pose_estimator_sync_class.cpp)
-target_link_libraries(pose_estimator_sync_class 
+add_executable(pose_estimator_sync_class_encoder_only src/pose_estimator_sync_class_encoder_only.cpp)
+target_link_libraries(pose_estimator_sync_class_encoder_only 
 ${catkin_LIBRARIES} 
 )
-add_dependencies(pose_estimator self_driving_rc_car_generate_messages_cpp)
+add_dependencies(pose_estimator_sync_class_encoder_only self_driving_rc_car_generate_messages_cpp)
+
+add_executable(ext_kf src/ext_kf.cpp)
+target_link_libraries(ext_kf 
+${catkin_LIBRARIES} 
+)

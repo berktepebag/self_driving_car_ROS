@@ -4,7 +4,7 @@
 #include <std_msgs/Float64.h>
 
 
-#include "joystick_controller.h"
+#include "self_driving_rc_car/joystick_controller.h"
 
 void JoystickTeleop::joyCallback(const sensor_msgs::Joy::ConstPtr &joy){
 
@@ -22,7 +22,7 @@ void JoystickTeleop::joyCallback(const sensor_msgs::Joy::ConstPtr &joy){
 
 void JoystickTeleop::joyCommandPublish(){
 
-  teleop_msg.header.frame_id = "frame_id";
+  teleop_msg.header.frame_id = "joystick_frame";
   teleop_msg.header.stamp = ros::Time::now();
 
   teleop_cmd_pub.publish(teleop_msg);
@@ -35,7 +35,7 @@ int main(int argc, char** argv)
 
   JoystickTeleop joy_teleop;
 
-  ros::Rate rate(30);
+  ros::Rate rate(50);
   while(ros::ok())
   {
     joy_teleop.joyCommandPublish();
@@ -43,5 +43,7 @@ int main(int argc, char** argv)
     ros::spinOnce();
     rate.sleep();
   }  
+
+  return 0;
 
 }
