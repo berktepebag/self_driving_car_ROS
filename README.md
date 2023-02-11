@@ -1,3 +1,5 @@
+### *** Archieved: As this repo is and will not updated anymore, it is archieved. ***
+
 With Jetson nano somethings has changed.
 
 Jetson nano comes with Ubuntu 18.04 and ROS Melodic. As far as I could understand Melodic's Python is 3.5+. So PCA9685 is not working directly as it was working in Raspberry Pi. So things to do and links to follow:
